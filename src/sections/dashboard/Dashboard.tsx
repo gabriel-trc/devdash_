@@ -1,4 +1,8 @@
-import { InMemoryGitHubRepositoryRepository } from "../../infrastructure/InMemoryGitHubRepositoryRepository";
+import { useEffect, useState } from "react";
+
+import { config } from "../../devdash_config";
+import { GitHubApiGitHubRepositoryRepository } from "../../infrastructure/GitHubAPIGitHubRepositoryRepository";
+import { GitHubApiResponses } from "../../infrastructure/GitHubApiResponse";
 import { ReactComponent as Brand } from "./brand.svg";
 import { ReactComponent as Check } from "./check.svg";
 import styles from "./Dashboard.module.scss";
@@ -27,9 +31,16 @@ const isoToReadableDate = (lastUpdate: string): string => {
 	return `${diffDays} days ago`;
 };
 
+const repository = new GitHubApiGitHubRepositoryRepository(config.github_access_token);
+
 export function Dashboard() {
-	const repository = new InMemoryGitHubRepositoryRepository();
-	const repositories = repository.search();
+	const [gitHubApiResponses, setGitHubApiResponses] = useState<GitHubApiResponses[]>([]);
+
+	useEffect(() => {
+		repository
+			.search(config.widgets.map((widget) => widget.repository_url))
+			.then((responses) => setGitHubApiResponses(responses));
+	}, []);
 
 	return (
 		<>
@@ -40,7 +51,7 @@ export function Dashboard() {
 				</section>
 			</header>
 			<section className={styles.container}>
-				{repositories.map((widget) => (
+				{gitHubApiResponses.map((widget) => (
 					<article className={styles.widget} key={widget.repositoryData.id}>
 						<header className={styles.widget__header}>
 							<a
@@ -57,9 +68,9 @@ export function Dashboard() {
 						<div className={styles.widget__body}>
 							<div className={styles.widget__status}>
 								<p>Last update {isoToReadableDate(widget.repositoryData.updated_at)}</p>
-								{widget.CiStatus.workflow_runs.length > 0 && (
+								{widget.ciStatus.workflow_runs.length > 0 && (
 									<div>
-										{widget.CiStatus.workflow_runs[0].status === "completed" ? (
+										{widget.ciStatus.workflow_runs[0].status === "completed" ? (
 											<Check />
 										) : (
 											<Error />
@@ -88,7 +99,7 @@ export function Dashboard() {
 							</div>
 							<div className={styles.widget__stat}>
 								<PullRequests />
-								<span>{widget.pullRequest.length}</span>
+								<span>{widget.pullRequests.length}</span>
 							</div>
 						</footer>
 					</article>
