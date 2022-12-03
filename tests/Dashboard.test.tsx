@@ -1,28 +1,30 @@
 import { render, screen } from "@testing-library/react";
-import { githubApiResponses } from "../src/github_api_responses";
+import { mock } from "jest-mock-extended";
 
-import { GitHubApiGitHubRepositoryRepository } from "../src/infrastructure/GitHubApiGitHubRepositoryRepository";
+import { GitHubRepositoryRepository } from "../src/domain/GitHubRepositoryRepository";
 import { Dashboard } from "../src/sections/dashboard/Dashboard";
+import { GitHubRepositoryMother } from "./GitHubRepositoryMother";
 
-jest.mock("../src/infrastructure/GitHubApiGitHubRepositoryRepository");
-const mockRepository =
-	GitHubApiGitHubRepositoryRepository as jest.Mock<GitHubApiGitHubRepositoryRepository>;
+const mockRepository = mock<GitHubRepositoryRepository>();
 
 describe("Dashboard section", () => {
 	it("show all widgets", async () => {
-		mockRepository.mockImplementationOnce(() => {
-			return {
-				search: () => Promise.resolve(githubApiResponses),
-			} as unknown as GitHubApiGitHubRepositoryRepository;
-			// Este casteo a unknown es porque no se implementaron todas las funcionalidades del GitHubApiGitHubRepositoryRepository, ej. searchBy, urlToId.
+		const gitHubRepository = GitHubRepositoryMother.create();
+
+		mockRepository.search.mockResolvedValue([gitHubRepository]);
+
+		render(<Dashboard repository={mockRepository} />);
+
+		const title = await screen.findByRole("heading", {
+			name: new RegExp("DevDash_", "i"),
 		});
 
-		render(<Dashboard />);
-		const firstWidgetTitle = `${githubApiResponses[0].repositoryData.organization.login}/${githubApiResponses[0].repositoryData.name}`;
-
-		const firstWidgetHeader = await screen.findAllByRole("heading", {
+		const firstWidgetTitle = `${gitHubRepository.id.organization}/${gitHubRepository.id.name}`;
+		const firstWidgetHeader = await screen.findByRole("heading", {
 			name: new RegExp(firstWidgetTitle, "i"),
 		});
+
+		expect(title).toBeInTheDocument();
 		expect(firstWidgetHeader).toBeInTheDocument();
 	});
 
