@@ -26,50 +26,52 @@ const isoToReadableDate = (lastUpdate: Date): string => {
 	return `${diffDays} days ago`;
 };
 
-export function GitHubRepositoryWidget({ widget }: { widget: GitHubRepository }) {
+export function GitHubRepositoryWidget({ repository }: { repository: GitHubRepository }) {
 	return (
-		<article className={styles.widget} key={`${widget.id.organization}/${widget.id.name}`}>
+		<article className={styles.widget} key={`${repository.id.organization}/${repository.id.name}`}>
 			<header className={styles.widget__header}>
 				<h2 className={styles.widget__title}>
 					<a
 						className={styles.widget__title}
-						href={widget.url}
+						href={`/repository/${repository.id.organization}/${repository.id.name}`}
 						target="_blank"
-						title={`${widget.id.organization}/${widget.id.name}`}
+						title={`${repository.id.organization}/${repository.id.name}`}
 						rel="noreferrer"
 					>
-						{widget.id.organization}/{widget.id.name}
+						{repository.id.organization}/{repository.id.name}
 					</a>
 				</h2>
-				{widget.private ? <Lock /> : <Unlock />}
+				{repository.private ? <Lock /> : <Unlock />}
 			</header>
 			<div className={styles.widget__body}>
 				<div className={styles.widget__status}>
-					<p>Last update {isoToReadableDate(widget.updatedAt)}</p>
-					{widget.hasWorkflows && <div>{widget.isLastWorkflowSuccess ? <Check /> : <Error />}</div>}
+					<p>Last update {isoToReadableDate(repository.updatedAt)}</p>
+					{repository.hasWorkflows && (
+						<div>{repository.isLastWorkflowSuccess ? <Check /> : <Error />}</div>
+					)}
 				</div>
-				<p className={styles.widget__description}>{widget.description}</p>
+				<p className={styles.widget__description}>{repository.description}</p>
 			</div>
 			<footer className={styles.widget__footer}>
 				<div className={styles.widget__stat}>
 					<Start />
-					<span>{widget.stars}</span>
+					<span>{repository.stars}</span>
 				</div>
 				<div className={styles.widget__stat}>
 					<Watchers />
-					<span>{widget.watchers}</span>
+					<span>{repository.watchers}</span>
 				</div>
 				<div className={styles.widget__stat}>
 					<Forks />
-					<span>{widget.forks}</span>
+					<span>{repository.forks}</span>
 				</div>
 				<div className={styles.widget__stat}>
 					<IssueOpened />
-					<span>{widget.issues}</span>
+					<span>{repository.issues}</span>
 				</div>
 				<div className={styles.widget__stat}>
 					<PullRequests />
-					<span>{widget.pullRequests}</span>
+					<span>{repository.pullRequests}</span>
 				</div>
 			</footer>
 		</article>
