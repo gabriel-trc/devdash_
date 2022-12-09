@@ -2,12 +2,12 @@ import React from "react";
 
 import { config } from "../../devdash_config";
 import { GitHubApiGitHubRepositoryRepository } from "../../infrastructure/GitHubApiGitHubRepositoryRepository";
-import { Dashboard } from "./Dashboard";
+import { GitHubRepositoryDetail } from "./GitHubRepositoryDetail";
 
 const repository = new GitHubApiGitHubRepositoryRepository(config.github_access_token);
 
-export class DashboardFactory {
+export class GitHubRepositoryDetailFactory {
 	static create(): React.ReactElement {
-		return <Dashboard repository={repository} />;
+		return <GitHubRepositoryDetail repository={repository} />;
 	}
 }

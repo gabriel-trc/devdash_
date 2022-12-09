@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+
 import { ReactComponent as Brand } from "./brand.svg";
 import styles from "./Layout.module.scss";
 
