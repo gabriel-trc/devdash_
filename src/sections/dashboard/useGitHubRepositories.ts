@@ -21,5 +21,5 @@ export function useGitHubRepositories(
 		});
 	}, [repository, repositoryUrls]);
 
-	return { isLoading, repositoryData };
+	return { repositoryData, isLoading };
 }

@@ -3,15 +3,25 @@ import { useParams } from "react-router-dom";
 
 import { ReactComponent as Lock } from "../../assets/svgs/lock.svg";
 import { ReactComponent as Unlock } from "../../assets/svgs/unlock.svg";
+import { GitHubRepositoryPullRequestRepository } from "../../domain/GitHubRepositoryPullRequestRepository";
 import { GitHubRepositoryRepository } from "../../domain/GitHubRepositoryRepository";
+import { useInViewport } from "../layout/useInViewport";
 import styles from "./GitHubRepositoryDetail.module.scss";
+import { PullRequests } from "./PullRequests";
 import { useGitHubRepository } from "./useGithubRepository";
 
-export function GitHubRepositoryDetail({ repository }: { repository: GitHubRepositoryRepository }) {
+export function GitHubRepositoryDetail({
+	gitHubRepositoryRepository,
+	gitHubRepositoryPullRequestRepository,
+}: {
+	gitHubRepositoryRepository: GitHubRepositoryRepository;
+	gitHubRepositoryPullRequestRepository: GitHubRepositoryPullRequestRepository;
+}) {
+	const { isInViewport, ref } = useInViewport();
 	const { organization, name } = useParams() as { organization: string; name: string };
 
 	const repositoryId = useMemo(() => ({ name, organization }), [name, organization]);
-	const { repositoryData } = useGitHubRepository(repository, repositoryId);
+	const { repositoryData } = useGitHubRepository(gitHubRepositoryRepository, repositoryId);
 
 	if (!repositoryData) {
 		return <></>;
@@ -92,6 +102,15 @@ export function GitHubRepositoryDetail({ repository }: { repository: GitHubRepos
 			) : (
 				<p>There are no workflow runs</p>
 			)}
+
+			<section ref={ref}>
+				{isInViewport && (
+					<PullRequests
+						repository={gitHubRepositoryPullRequestRepository}
+						repositoryId={repositoryId}
+					/>
+				)}
+			</section>
 		</section>
 	);
 }
