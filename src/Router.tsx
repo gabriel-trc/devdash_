@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import { DashboardFactory } from "./sections/dashboard/DashboardFactory";
 import { GitHubRepositoryDetailFactory } from "./sections/gitHubRepositoryDetail/GithubRepositoryDetailFactory";
 import { Layout } from "./sections/layout/Layout";
@@ -20,6 +21,6 @@ const router = createBrowserRouter([
 	},
 ]);
 
-export default function Router() {
+export function Router() {
 	return <RouterProvider router={router} />;
 }
