@@ -14,6 +14,7 @@ export function useGitHubRepository(
 	useEffect(() => {
 		repository.byId(repositoryId).then((repositoryData) => {
 			setRepositoryData(repositoryData);
+			document.dispatchEvent(new CustomEvent("pageLoaded"));
 		});
 	}, [repository, repositoryId]);
 

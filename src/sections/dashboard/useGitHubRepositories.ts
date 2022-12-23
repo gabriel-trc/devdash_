@@ -18,6 +18,7 @@ export function useGitHubRepositories(
 		repository.search(repositoryUrls).then((repositoryData) => {
 			setRepositoryData(repositoryData);
 			setIsLoading(false);
+			document.dispatchEvent(new CustomEvent("pageLoaded"));
 		});
 	}, [repository, repositoryUrls]);
 

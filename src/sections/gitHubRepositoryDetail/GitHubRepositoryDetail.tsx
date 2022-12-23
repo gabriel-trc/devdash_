@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import { ReactComponent as Lock } from "../../assets/svgs/lock.svg";
@@ -38,7 +38,6 @@ export function GitHubRepositoryDetail({
 				{repositoryData.private ? <Lock /> : <Unlock />}
 			</header>
 
-			<p>{3 / 0}</p>
 			<p>{repositoryData.description}</p>
 
 			<h3>Repository stats</h3>
