@@ -23,6 +23,8 @@ describe("AddWidgetForm", () => {
 	});
 
 	it("save new widget when form is submitted", async () => {
+		mockRepository.search.mockResolvedValue([]);
+
 		const newWidget: RepositoryWidget = {
 			id: "newWidgetId",
 			repositoryUrl: "https://github.com/gabriel-trc/devdash_",
@@ -52,19 +54,20 @@ describe("AddWidgetForm", () => {
 
 		expect(addAnotherRepositoryFormButton).toBeInTheDocument();
 		expect(mockRepository.save).toHaveBeenCalledWith(newWidget);
+		mockRepository.save.mockReset();
 	});
 
 	it("show error when repository already exists in Dashboard", async () => {
 		const existingWidget: RepositoryWidget = {
 			id: "existingWidgetId",
-			repositoryUrl: "https://github/CodelyTV/DevDash",
+			repositoryUrl: "https://github.com/CodelyTV/DevDash",
 		};
 
 		mockRepository.search.mockResolvedValue([existingWidget]);
 
 		const newWidgetWithSameUrl: RepositoryWidget = {
-			id: "existingWidgetId",
-			repositoryUrl: "https://github/CodelyTV/DevDash",
+			id: "newWidgetId",
+			repositoryUrl: "https://github.com/CodelyTV/DevDash",
 		};
 
 		render(<AddRepositoryWidgetForm repository={mockRepository} />);
