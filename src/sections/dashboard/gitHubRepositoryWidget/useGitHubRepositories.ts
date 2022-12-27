@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react";
 
-import { GitHubRepository } from "../../domain/GitHubRepository";
-import { GitHubRepositoryRepository } from "../../domain/GitHubRepositoryRepository";
+import { GitHubRepository } from "../../../domain/GitHubRepository";
+import { GitHubRepositoryRepository } from "../../../domain/GitHubRepositoryRepository";
 
 export function useGitHubRepositories(
 	repository: GitHubRepositoryRepository,
 	repositoryUrls: string[]
 ): {
-	repositoryData: GitHubRepository[];
+	gitHubRepositories: GitHubRepository[];
 	isLoading: boolean;
 } {
-	const [repositoryData, setRepositoryData] = useState<GitHubRepository[]>([]);
+	const [gitHubRepositories, setGitHubRepositories] = useState<GitHubRepository[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		setIsLoading(true);
 		repository.search(repositoryUrls).then((repositoryData) => {
-			setRepositoryData(repositoryData);
+			setGitHubRepositories(repositoryData);
 			setIsLoading(false);
 			document.dispatchEvent(new CustomEvent("pageLoaded"));
 		});
 	}, [repository, repositoryUrls]);
 
-	return { repositoryData, isLoading };
+	return { gitHubRepositories, isLoading };
 }

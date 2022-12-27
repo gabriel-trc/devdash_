@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import { ReactComponent as Lock } from "../../assets/svgs/lock.svg";
