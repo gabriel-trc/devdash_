@@ -11,22 +11,42 @@ type FormEvent<T> = React.FormEvent<HTMLFormElement> & {
 
 type FormFields = { id: string; repositoryUrl: string };
 
+function isValidHttpUrl(repositoryUrl: string) {
+	try {
+		const url = new URL(repositoryUrl);
+		return (
+			url.host.toLowerCase().startsWith("github.com") &&
+			(url.protocol === "http:" || url.protocol === "https:")
+		);
+	} catch (_) {
+		return false;
+	}
+}
+
 export function AddRepositoryWidgetForm({
 	repository,
 }: {
 	repository: RepositoryWidgetRepository;
 }) {
+	const [formValues, setFormValues] = useState<FormFields>({ id: "", repositoryUrl: "" });
+	const [isFormDisabled, setIsFormDisabled] = useState(true);
 	const [isFormActive, setIsFormActive] = useState(false);
 	const [hasAlreadyExistsError, setHasAlreadyExistsError] = useState(false);
 	const { save } = useAddRepositoryWidget(repository);
 
 	const submitForm = async (ev: FormEvent<FormFields>) => {
 		ev.preventDefault();
-		const { id, repositoryUrl } = ev.target.elements;
-		const error = await save({ id: id.value, repositoryUrl: repositoryUrl.value });
+		//const { id, repositoryUrl } = ev.target.elements;
+		const error = await save(formValues);
 		setHasAlreadyExistsError(Boolean(error));
 		setIsFormActive(false);
 	};
+
+	function handleOnChangeFormField(ev: React.ChangeEvent<HTMLInputElement>) {
+		const { name, value } = ev.target;
+		setFormValues((prevValue) => ({ ...prevValue, [name]: value }));
+		setIsFormDisabled(!isValidHttpUrl(formValues.repositoryUrl));
+	}
 
 	return (
 		<article className={styles.add_widget}>
@@ -40,11 +60,23 @@ export function AddRepositoryWidgetForm({
 					<form className={styles.form} onSubmit={submitForm}>
 						<div>
 							<label htmlFor="id">Id</label>
-							<input type="text" name="id" id="id" />
+							<input
+								type="text"
+								name="id"
+								id="id"
+								value={formValues.id}
+								onChange={handleOnChangeFormField}
+							/>
 						</div>
 						<div>
 							<label htmlFor="repositoryUrl">Url del repositorio</label>
-							<input type="text" name="repositoryUrl" id="repositoryUrl" />
+							<input
+								type="text"
+								name="repositoryUrl"
+								id="repositoryUrl"
+								value={formValues.repositoryUrl}
+								onChange={handleOnChangeFormField}
+							/>
 						</div>
 						{hasAlreadyExistsError && (
 							<p className={styles.error} role="alert" aria-describedby="duplicated-error">
@@ -52,7 +84,7 @@ export function AddRepositoryWidgetForm({
 							</p>
 						)}
 						<div>
-							<input type="submit" value="Añadir" />
+							<input type="submit" value="Añadir" disabled={isFormDisabled} />
 						</div>
 					</form>
 				)}
