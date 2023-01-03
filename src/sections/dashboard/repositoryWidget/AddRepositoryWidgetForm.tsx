@@ -11,14 +11,14 @@ type FormEvent<T> = React.FormEvent<HTMLFormElement> & {
 
 type FormFields = { id: string; repositoryUrl: string };
 
-function isValidHttpUrl(repositoryUrl: string) {
+function isValidHttpUrl(repositoryUrl: string): boolean {
 	try {
 		const url = new URL(repositoryUrl);
 		return (
 			url.host.toLowerCase().startsWith("github.com") &&
 			(url.protocol === "http:" || url.protocol === "https:")
 		);
-	} catch (_) {
+	} catch (error) {
 		return false;
 	}
 }
@@ -34,7 +34,7 @@ export function AddRepositoryWidgetForm({
 	const [hasAlreadyExistsError, setHasAlreadyExistsError] = useState(false);
 	const { save } = useAddRepositoryWidget(repository);
 
-	const submitForm = async (ev: FormEvent<FormFields>) => {
+	const submitForm = async (ev: React.FormEvent<HTMLFormElement>) => {
 		ev.preventDefault();
 		//const { id, repositoryUrl } = ev.target.elements;
 		const error = await save(formValues);
