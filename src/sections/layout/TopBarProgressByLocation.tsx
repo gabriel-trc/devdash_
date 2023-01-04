@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import TopBarProgress from "react-topbar-progress-indicator";
+import { UIEvents } from "../UIEvents";
 
 TopBarProgress.config({
 	barColors: {
@@ -29,10 +30,10 @@ const TopBarProgressByLocation = () => {
 		function disableTopBar() {
 			setProgress(false);
 		}
-		document.addEventListener("pageLoaded", disableTopBar);
+		document.addEventListener(UIEvents.pageRenderedComplete, disableTopBar);
 
 		return () => {
-			document.removeEventListener("pageLoaded", disableTopBar);
+			document.removeEventListener(UIEvents.pageRenderedComplete, disableTopBar);
 		};
 	}, [previousLocation]);
 

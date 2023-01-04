@@ -1,6 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { config } from "../../../devdash_config";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
+import { config } from "../../../devdash_config";
+import { DomainEvents } from "../../../domain/DomainEvents";
 import { RepositoryWidget } from "../../../domain/RepositoryWidget";
 import { RepositoryWidgetRepository } from "../../../domain/RepositoryWidgetRepository";
 
@@ -26,7 +27,19 @@ function RepositoryWidgetContextProvider({
 			}
 			setRepositoryWidgets(repositoryWidgets);
 		});
-	}, []);
+	}, [repository]);
+
+	useEffect(() => {
+		const reloadRepositoryWidgets = () => {
+			repository.search().then(setRepositoryWidgets);
+		};
+
+		document.addEventListener(DomainEvents.repositoryWidgetAdded, reloadRepositoryWidgets);
+
+		return () => {
+			document.removeEventListener(DomainEvents.repositoryWidgetAdded, reloadRepositoryWidgets);
+		};
+	}, [repository]);
 
 	return (
 		<RepositoryWidgetContext.Provider value={{ repositoryWidgets }}>

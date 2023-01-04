@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { GitHubRepository } from "../../../domain/GitHubRepository";
 import { GitHubRepositoryRepository } from "../../../domain/GitHubRepositoryRepository";
+import { UIEvents } from "../../UIEvents";
 
 export function useGitHubRepositories(
 	repository: GitHubRepositoryRepository,
@@ -18,7 +19,7 @@ export function useGitHubRepositories(
 		repository.search(repositoryUrls).then((repositoryData) => {
 			setGitHubRepositories(repositoryData);
 			setIsLoading(false);
-			document.dispatchEvent(new CustomEvent("pageLoaded"));
+			document.dispatchEvent(new CustomEvent(UIEvents.pageRenderedComplete));
 		});
 	}, [repository, repositoryUrls]);
 

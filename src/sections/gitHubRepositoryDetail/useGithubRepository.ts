@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { GitHubRepository, RepositoryId } from "../../domain/GitHubRepository";
 import { GitHubRepositoryRepository } from "../../domain/GitHubRepositoryRepository";
+import { UIEvents } from "../UIEvents";
 
 export function useGitHubRepository(
 	repository: GitHubRepositoryRepository,
@@ -14,7 +15,7 @@ export function useGitHubRepository(
 	useEffect(() => {
 		repository.byId(repositoryId).then((repositoryData) => {
 			setRepositoryData(repositoryData);
-			document.dispatchEvent(new CustomEvent("pageLoaded"));
+			document.dispatchEvent(new CustomEvent(UIEvents.pageRenderedComplete));
 		});
 	}, [repository, repositoryId]);
 
