@@ -5,9 +5,9 @@ import { RepositoryWidgetRepository } from "../../../domain/RepositoryWidgetRepo
 import styles from "./AddRepositoryWidgetForm.module.scss";
 import { useAddRepositoryWidget } from "./useAddRepositoryWidget";
 
-type FormEvent<T> = React.FormEvent<HTMLFormElement> & {
-	target: { elements: { [key in keyof T]: { value: T[key] } } };
-};
+// type FormEvent<T> = React.FormEvent<HTMLFormElement> & {
+// 	target: { elements: { [key in keyof T]: { value: T[key] } } };
+// };
 
 type FormFields = { id: string; repositoryUrl: string };
 
