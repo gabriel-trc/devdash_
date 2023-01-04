@@ -40,12 +40,16 @@ export function AddRepositoryWidgetForm({
 		const error = await save(formValues);
 		setHasAlreadyExistsError(Boolean(error));
 		setIsFormActive(false);
+		if (!error) {
+			setFormValues({ id: "", repositoryUrl: "" });
+		}
 	};
 
 	function handleOnChangeFormField(ev: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = ev.target;
 		setFormValues((prevValue) => ({ ...prevValue, [name]: value }));
 		setIsFormDisabled(!isValidHttpUrl(formValues.repositoryUrl));
+		setHasAlreadyExistsError(false);
 	}
 
 	return (
