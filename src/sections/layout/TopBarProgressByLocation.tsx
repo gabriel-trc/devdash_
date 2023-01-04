@@ -27,6 +27,10 @@ const TopBarProgressByLocation = () => {
 	}, [location]);
 
 	useEffect(() => {
+		setProgress(false);
+	}, [previousLocation]);
+
+	useEffect(() => {
 		function disableTopBar() {
 			setProgress(false);
 		}
@@ -35,7 +39,7 @@ const TopBarProgressByLocation = () => {
 		return () => {
 			document.removeEventListener(UIEvents.pageRenderedComplete, disableTopBar);
 		};
-	}, [previousLocation]);
+	}, []);
 
 	if (!progress) {
 		return <></>;
